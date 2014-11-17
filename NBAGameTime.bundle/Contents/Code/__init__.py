@@ -268,7 +268,7 @@ def Authenticate():
 		"password": Prefs['password']
 	}
 
-	login = Http.Request(url='https://watch.nba.com/nba/secure/login', values=data, headers = {'Content-type': 'application/x-www-form-urlencoded', 'User-Agent': Util.RandomItemFromList(UA)}, cacheTime=0).content
+	login = HTTP.Request(url='https://watch.nba.com/nba/secure/login', values=data, headers = {'Content-type': 'application/x-www-form-urlencoded', 'User-Agent': Util.RandomItemFromList(UA)}, cacheTime=0).content
 	Dict['auth'] = login.headers['Set-Cookie']
 
 
