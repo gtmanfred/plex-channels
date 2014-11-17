@@ -415,7 +415,8 @@ def Authenticate():
 	if Prefs['rogers']:
 		data['rogers'] = 'true'
 
-	login = HTTP.Request(url='https://gamecenter.nhl.com/nhlgc/secure/login', values=data, headers = {'Content-type': 'application/x-www-form-urlencoded', 'User-Agent': Util.RandomItemFromList(UA)}, cacheTime=0).content
+	login = HTTP.Request(url='https://gamecenter.nhl.com/nhlgc/secure/login', values=data, headers = {'Content-type': 'application/x-www-form-urlencoded', 'User-Agent': Util.RandomItemFromList(UA)}, cacheTime=0)
+	login.load()
 	Dict['auth'] = login.headers['Set-Cookie']
 
 
