@@ -214,11 +214,19 @@ def ArchivedGameMenu(id, away, home):
 	))
 	return oc
 
+
 @route(PREFIX + '/livegames')
 def LiveGames():
 
 	oc = ObjectContainer(title2="Live Games", no_cache=True)
 	today = Datetime.Now()
+
+	console = XML.ElementFromURL('http://gamecenter.nhl.com/nhlgc/servlets/simpleconsole?format=xml&app=true', cacheTime=0)
+	date = console.xpath("//currentDate/text()")[0].replace('T', ' ')
+	date = Datetime.ParseDate(date)
+
+	if today >= date:
+		today = date
 
 	url = today.strftime('http://f.nhl.com/livescores/nhl/leagueapp/20142015/scores/%Y-%m-%d_O2T1.json')
 	schedule = JSON.ObjectFromURL(url)
