@@ -407,11 +407,33 @@ def PlayEncryptedVideo(url, bitrate):
 	if 'auth' not in Dict:
 		Authenticate()
 
-	path = XML.ElementFromURL(url, headers = {'User-Agent': Util.RandomItemFromList(UA), 'Cookie': Dict['auth']})
+	path = XML.ElementFromURL(url, headers = {'User-Agent': Util.RandomItemFromList(UA), 'Cookie': Dict['auth']}, cacheTime = 1)
 	path = path.xpath("//path/text()")[0]
+
 	if Prefs['bitrate'] != 'Auto':
 		path = path.replace('ced', Prefs['bitrate'])
-	return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(path))
+	Log.Debug("GOT URL: " + path)
+
+	tempPath = path
+	if 'ced' in tempPath:
+		tempPath = tempPath.replace('ced', '3000')
+
+	#get m3u8
+	req_m3u8 = HTTP.Request(tempPath)
+
+	#get cookie number 1
+	cookies = req_m3u8.headers['Set-Cookie']
+	Log.Debug("COOKIE 1: %s" %cookies)
+	#find key uri
+	m = re.search('.*EXT-X-KEY.*URI="(.*)".*', req_m3u8.content)
+	if m:
+		key_uri = m.group(1)
+		Log.Debug("FOUND KEY URI: %s" %key_uri)
+		#cookie #2 this is the X-NL-SK cookie
+		cookies += "; " + HTTP.Request(key_uri, headers = {'Cookie': cookies}).headers['Set-Cookie']
+		Log.Debug("COOKIE 2: %s" %cookies)
+
+	return IndirectResponse(VideoClipObject, key=HTTPLiveStreamURL(path), http_cookies = cookies)
 
 
 def Authenticate():
