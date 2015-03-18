@@ -100,7 +100,7 @@ def LiveGames():
 	oc = ObjectContainer(title2="Live Games", no_cache=True)
 	today = Datetime.Now()
 	monday = today - datetime.timedelta(days=today.weekday())
-	schedule = HTTP.Request(url=monday.strftime('http://smb.cdnak.neulion.com/fs/nba/feeds_s2012/schedule/%Y/%m_%d.js'), cacheTime=CACHE_1DAY*6).content.replace('var g_schedule=', '')
+	schedule = HTTP.Request(url=monday.strftime('http://smb.cdnak.neulion.com/fs/nba/feeds_s2012/schedule/%Y/%-m_%-d.js'), cacheTime=CACHE_1DAY*6).content.replace('var g_schedule=', '')
 	schedule = JSON.ObjectFromString(schedule)
 	for s in schedule['games'][today.weekday()]:
 		id = s['id']
