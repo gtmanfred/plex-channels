@@ -248,7 +248,7 @@ def PlayEncryptedVideo(data):
 		Authenticate()
 
 	path = XML.ElementFromURL('http://watch.nba.com/nba/servlets/publishpoint',
-		data = urllib.urlencode(data),
+		values = data,
 		headers = {'User-Agent': Util.RandomItemFromList(UA), 'Cookie': Dict['auth']}
 	)
 
